@@ -64,4 +64,5 @@ class BlogController extends AbstractController
             self::POSTS[array_search($slug, array_column(self::POSTS, 'slug'))]
         );
     }
+
 }
