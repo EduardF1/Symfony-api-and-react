@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Format;
+namespace App\Format1;
 
 class XML {
   

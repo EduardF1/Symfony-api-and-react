@@ -5,9 +5,9 @@ require __DIR__.'/../vendor/autoload.php';
 // use App\Format;
 // use App\Format as F;
 // use App\Format\{JSON,XML,YAML}
- use App\Format\JSON;
- use App\Format\XML;
- use App\Format\YAML;
+ use App\Format1\JSON;
+ use App\Format1\XML;
+ use App\Format1\YAML;
 
 // $json = new App\Format\JSON();
 // $xml = new App\Format\XML();

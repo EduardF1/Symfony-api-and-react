@@ -1,7 +1,7 @@
 {
     "name": "php-basics/php-7",
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.0.0",
       "ext-json": "*"
     },
     "autoload": {

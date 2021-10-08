@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Format2;
+namespace App\Format3;
 
 class YAML {
   
