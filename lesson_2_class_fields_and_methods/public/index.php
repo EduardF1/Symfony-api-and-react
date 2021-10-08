@@ -2,6 +2,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+<<<<<<< HEAD
 // use App2\Format2;
 // use App2\Format2 as F;
 // use App2\Format2\{JSON,XML,YAML}
@@ -12,6 +13,18 @@ use App2\Format2\YAML;
 // $json = new App2\Format2\JSON();
 // $xml = new App2\Format2\XML();
 // $yml = new App2\Format2\YAML();
+=======
+// use App\Format2;
+// use App\Format2 as F;
+// use App\Format2\{JSON,XML,YAML}
+use App\Format2\JSON;
+use App\Format2\XML;
+use App\Format2\YAML;
+
+// $json = new App\Format2\JSON();
+// $xml = new App\Format2\XML();
+// $yml = new App\Format2\YAML();
+>>>>>>> 02e56e2cfc3bd91abf260ecf8facff9ec0fb0d16
 
 // $json = new F\JSON();
 // $xml = new F\XML();
