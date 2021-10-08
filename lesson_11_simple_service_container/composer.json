@@ -1,0 +1,12 @@
+{
+    "name": "lesson_11_simple_service_container/php-7",
+    "require": {
+        "php": ">=7.0.0",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App11\\": "src/"
+        }
+    }
+}

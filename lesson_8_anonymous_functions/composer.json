@@ -1,0 +1,12 @@
+{
+    "name": "lesson_8_anonymous_functions/php-7",
+    "require": {
+        "php": ">=7.0.0",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App8\\": "src/"
+        }
+    }
+}

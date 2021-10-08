@@ -1,0 +1,12 @@
+{
+    "name": "lesson_1_namespaces/php-7",
+    "require": {
+        "php": ">=7.1",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

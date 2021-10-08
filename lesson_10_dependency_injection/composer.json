@@ -1,0 +1,12 @@
+{
+    "name": "lesson_10_dependency_injection/php-7",
+    "require": {
+        "php": ">=7.0.0",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App10\\": "src/"
+        }
+    }
+}

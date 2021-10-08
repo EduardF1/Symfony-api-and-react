@@ -1,0 +1,12 @@
+{
+    "name": "lesson_7_typed_arguments_and_return_types/php-7",
+    "require": {
+        "php": ">=7.0.0",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App7\\": "src/"
+        }
+    }
+}
