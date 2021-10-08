@@ -2,9 +2,15 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+<<<<<<< HEAD
+use App5\Format5\JSON;
+use App5\Format5\XML;
+use App5\Format5\YAML;
+=======
 use App\Format5\JSON;
 use App\Format5\XML;
 use App\Format5\YAML;
+>>>>>>> 02e56e2cfc3bd91abf260ecf8facff9ec0fb0d16
 
 print_r("Inheritance\n\n");
 

@@ -3,9 +3,15 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 
+<<<<<<< HEAD
+use App4\Format4\JSON;
+use App4\Format4\XML;
+use App4\Format4\YAML;
+=======
 use App\Format4\JSON;
 use App\Format4\XML;
 use App\Format4\YAML;
+>>>>>>> 02e56e2cfc3bd91abf260ecf8facff9ec0fb0d16
 
 print_r("Inheritance\n\n");
 

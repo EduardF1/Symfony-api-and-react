@@ -2,11 +2,19 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+<<<<<<< HEAD
+use App6\Format6\FromStringInterface;
+use App6\Format6\JSON;
+use App6\Format6\XML;
+use App6\Format6\YAML;
+use App6\Format6\NamedFormatInterface;
+=======
 use App\Format6\FromStringInterface;
 use App\Format6\JSON;
 use App\Format6\XML;
 use App\Format6\YAML;
 use App\Format6\NamedFormatInterface;
+>>>>>>> 02e56e2cfc3bd91abf260ecf8facff9ec0fb0d16
 
 print_r("Interfaces\n\n");
 

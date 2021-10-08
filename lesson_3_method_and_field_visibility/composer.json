@@ -1,12 +1,20 @@
 {
+<<<<<<< HEAD
+    "name": "lesson_3_method_and_field_visibility/php-7",
+=======
     "name": "php-basics/php-7",
+>>>>>>> 02e56e2cfc3bd91abf260ecf8facff9ec0fb0d16
     "require": {
         "php": ">=7.0.0",
       "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
+<<<<<<< HEAD
+            "App3\\": "src/"
+=======
             "App\\": "src/"
+>>>>>>> 02e56e2cfc3bd91abf260ecf8facff9ec0fb0d16
         }
     }
 }
