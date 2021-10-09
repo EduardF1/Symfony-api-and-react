@@ -3,9 +3,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\BlogPost;
+use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -16,11 +18,17 @@ class AppFixtures extends Fixture
     private UserPasswordHasherInterface $passwordHasher;
 
     /**
+     * @var Factory
+     */
+    private $faker;
+
+    /**
      * @param UserPasswordHasherInterface $passwordHasher
      */
     public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
+        $this->faker = Factory::create();
     }
 
     /**
@@ -39,30 +47,35 @@ class AppFixtures extends Fixture
         /** @var User $user */
         $user = $this->getReference('user_admin');
 
-        $blogPost = new BlogPost();
-        $blogPost->setTitle('A first post!');
-        $blogPost->setPublished(new \DateTime('2021-10-09 12:50:00'));
-        $blogPost->setContent('Post text!');
-        $blogPost->setAuthor($user);
-        $blogPost->setSlug('a-first-post');
+        // generate 100 blog posts
+        for ($i = 0; $i < 100; $i++) {
+            $blogPost = new BlogPost();
+            $blogPost->setTitle($this->faker->realText(30));
+            $blogPost->setPublished($this->faker->dateTime);
+            $blogPost->setContent($this->faker->realText());
+            $blogPost->setAuthor($user);
+            $blogPost->setSlug($this->faker->slug);
 
-        $manager->persist($blogPost);
-
-        $blogPost2 = new BlogPost();
-        $blogPost2->setTitle('A second post!');
-        $blogPost2->setPublished(new \DateTime('2021-10-09 12:50:00'));
-        $blogPost2->setContent('Post text 2!');
-        $blogPost2->setAuthor($user);
-        $blogPost2->setSlug('a-second-post');
-
-        $manager->persist($blogPost2);
+            $this->setReference("blog_post_$i", $blogPost);
+            $manager->persist($blogPost);
+        }
 
         $manager->flush();
     }
 
     public function loadComments(ObjectManager $manager)
     {
+        for ($i = 0; $i < 100; $i++) {
+            for ($j = 0; $j < rand(1, 10); $j++) {
+                $comment = new Comment();
+                $comment->setContent($this->faker->realText());
+                $comment->setPublished($this->faker->dateTimeThisYear);
+                $comment->setAuthor($this->getReference('user_admin'));
 
+                $manager->persist($comment);
+            }
+        }
+        $manager->flush();
     }
 
     public function loadUsers(ObjectManager $manager)
