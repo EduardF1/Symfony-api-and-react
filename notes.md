@@ -54,3 +54,7 @@ run `symfony composer remove 'admin'` (remove the admin bundle), run `symfony co
 
 #### API platform:
 - Install using `composer require api`. (installs api platform and CORS bundle)
+
+#### Security:
+- See https://symfony.com/blog/new-in-symfony-5-3-passwordhasher-component (Implementation).
+- See https://symfony.com/doc/current/security.html#c-hashing-passwords (Configuration).

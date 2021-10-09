@@ -6,9 +6,23 @@ use App\Entity\BlogPost;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    /**
+     * @var UserPasswordHasherInterface
+     */
+    private UserPasswordHasherInterface $passwordHasher;
+
+    /**
+     * @param UserPasswordHasherInterface $passwordHasher
+     */
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     /**
      * Load data fixtures with the given object manager
      * @param ObjectManager $manager
@@ -20,7 +34,8 @@ class AppFixtures extends Fixture
         $this->loadComments($manager);
     }
 
-    public function loadBlogPosts(ObjectManager $manager){
+    public function loadBlogPosts(ObjectManager $manager)
+    {
         /** @var User $user */
         $user = $this->getReference('user_admin');
 
@@ -45,17 +60,22 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    public function loadComments(ObjectManager $manager){
+    public function loadComments(ObjectManager $manager)
+    {
 
     }
 
-    public function loadUsers(ObjectManager $manager){
+    public function loadUsers(ObjectManager $manager)
+    {
         $user = new User();
 
         $user->setUsername('admin');
         $user->setEmail('admin@blog.com');
         $user->setName('Adam Henrik');
-        $user->setPassword('secret123#');
+        $user->setPassword($this->passwordHasher->hashPassword(
+            $user,
+            'the_new_password'
+        ));
 
         $this->addReference('user_admin', $user);
 

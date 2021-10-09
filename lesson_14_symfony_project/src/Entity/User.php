@@ -7,12 +7,15 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @method string getUserIdentifier()
  */
 #[ApiResource]
-class User
+class User implements PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -53,7 +56,7 @@ class User
 
     // Required constructor (for Doctrine) for 1..* relationships
     // Typical procedure for entities that have a single to multiple cardinality
-    public function __construct(){
+    #[Pure] public function __construct(){
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
@@ -129,6 +132,4 @@ class User
     {
         $this->password = $password;
     }
-
-
 }
