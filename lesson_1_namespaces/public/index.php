@@ -2,16 +2,16 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-// use App\Format;
-// use App\Format as F;
-// use App\Format\{JSON,XML,YAML}
- use App\Format1\JSON;
- use App\Format1\XML;
- use App\Format1\YAML;
+// use App1\Format;
+// use App1\Format as F;
+// use App1\Format\{JSON,XML,YAML}
+ use App1\Format1\JSON;
+ use App1\Format1\XML;
+ use App1\Format1\YAML;
 
-// $json = new App\Format\JSON();
-// $xml = new App\Format\XML();
-// $yml = new App\Format\YAML();
+// $json = new App1\Format\JSON();
+// $xml = new App1\Format\XML();
+// $yml = new App1\Format\YAML();
 
 // $json = new F\JSON();
 // $xml = new F\XML();

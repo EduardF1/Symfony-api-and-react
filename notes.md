@@ -17,3 +17,40 @@
 
 #### API Routes:
 - All available routes can be listed by running `php bin/console debug:router`.
+
+#### ORM:
+- To install ORM  (doctrine), run `composer require symfony/orm-pack`.
+- Install maker (scaffolding for the database), run `composer require symfony/maker-bundle --dev`.
+- To generate an entity, run `php bin/console make:entity`.
+- Whilst generating entities, `?` will provide a list of all available types.
+- After generating the entity(ies), run `php bin/console make:migration` to create the database migrations.
+- To execute the migrations to the target database, run `php bin/console doctrine:migrations:migrate`.
+- To change an existing entity, add/remove the field(s) desired and run `php bin/console make:migration`, then
+run `User`.
+- After adding entity relations `1..*, *..* etc..` before executing the migrations, delete all tables within the 
+database and previous migrations, otherwise errors will occur.
+
+#### Serializer:
+- Install with `composer require serializer`.
+- Allows serialization/deserialization.
+
+#### Fixture Bundles (fake data for testing):
+- docs.: https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
+- Installation, run `composer require --dev doctrine/doctrine-fixtures-bundle`.
+- After installation, a class named `AppFixtures` will be found in `src/DataFixtures`,
+within it, test objects can be created. After those are created, run `php bin/console doctrine:fixtures:load`
+, type `y` or `yes` to load the data into the database. Note that the database records previous to the load will be
+erased ("purged").
+
+#### EasyAdmin:
+- Install with `composer require admin`
+- Create the dashboard with `php bin/console make:admin:dashboard`
+- Create the dashboard controller with `php bin/console make:admin:crud`
+- Additional steps: run `php bin/console cache:clar` (clear development dependencies),
+run `symfony composer remove 'admin'` (remove the admin bundle), run `symfony composer req 'admin'`.
+  - Ref.:  
+    - https://stackoverflow.com/questions/65483207/easyadmin-bundle-problems-while-developing-my-web-app
+    - https://stackoverflow.com/questions/33869521/how-can-i-enable-php-extension-intl
+
+#### API platform:
+- Install using `composer require api`. (installs api platform and CORS bundle)

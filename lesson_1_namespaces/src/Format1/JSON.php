@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Format1;
+namespace App1\Format1;
 
 class JSON {
 
