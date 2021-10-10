@@ -12,13 +12,14 @@
 3. A project named `projectName` will be created in `D:user/userName/projects`.
 4. After the project was generated, run `php -S 127.0.0.1:8000 -t public/` to run the web development server.
 5. Additionally, for starting/stopping the development server the following commands can be run:
-`symfony server:start` and `symfony server:stop`.
+   `symfony server:start` and `symfony server:stop`.
 
 ### Annotations (Symfony):
 
 - Not present by default, i.e. using the skeleton project, but they can be installed
   using `composer require annotations`.
-- Sometimes for new changes to take place, it is necessary to clear the development cache, run `php bin/console cache:clear`.
+- Sometimes for new changes to take place, it is necessary to clear the development cache,
+  run `php bin/console cache:clear`.
 
 ### API Routes:
 
@@ -70,9 +71,12 @@
   items (CRUD on 1 resource).
 - Regardless of single item manipulation or collection manipulation, specific operations can be enabled/disabled from
   the defaults provided by API Platform through using annotations on the resource class:
-- There property `normalizationContext` allows for custom serialization/deserialization contexts (https://api-platform.com/docs/core/serialization/).
-If no serialization/deserialization group (https://api-platform.com/docs/core/serialization/#using-serialization-groups) is provided, the "default" group is used.
+- There property `normalizationContext` allows for custom serialization/deserialization
+  contexts (https://api-platform.com/docs/core/serialization/). If no serialization/deserialization
+  group (https://api-platform.com/docs/core/serialization/#using-serialization-groups) is provided, the "default" group
+  is used.
 - Available api routes can be accessed using `php bin/console debug:router`.
+
 ```
 Example:
 /**
@@ -176,22 +180,29 @@ class User {
 ```
 
 #### Serialization groups
-- These can be used to include/exclude certain entity properties from the serialization. Typically, 
-there are 2 main categories, `read` (the serialized property will be present in the response) and `write`
+
+- These can be used to include/exclude certain entity properties from the serialization. Typically, there are 2 main
+  categories, `read` (the serialized property will be present in the response) and `write`
   (the property will be hidden within the response).
 - Docs.: https://api-platform.com/docs/core/serialization/#using-serialization-groups
 
 #### Adding services
-- After implementing a new service, it will be autowired and configured within the application by Symfony 
-itself, example run `php bin/console debug:container PasswordHashSubscriber` to verify the service's properties.
 
-#### Validation
+- After implementing a new service, it will be autowired and configured within the application by Symfony itself,
+  example run `php bin/console debug:container PasswordHashSubscriber` to verify the service's properties.
+
+### Validation
+
 - Symfony's validation component allows parameter validation on certain constraints.
+- Flow : API Platform --> deserialize data --> call the validator component for validation on the data.
 - Import (with "Assert" alias):
+
 ```
 use Symfony\Component\Validator\Constraints as Assert;
 ```
+
 - Example usage:
+
 ```
      * @Assert\NotBlank()               --->    assert that the property is not blank in the request object
      * @Assert\Length(min=6, max=255)   --->    assert that the length is in [6,255]
@@ -205,8 +216,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 ```
 
 #### Regex
-- Need to be surrounded with "/".
-Example:
+
+- Need to be surrounded with "/". Example:
+
 ```
 (?=.*[A-Z])     (?=.*[a-z])     (?=.*[0-9])     .{7,}
     |               |               |             |_ match on an input/text length of [7,inf)  
@@ -214,3 +226,73 @@ Example:
     |               |_ match against lower case letters
     |_ match against upper case letters
 ```
+
+#### Uniqueness of fields
+
+- Can be specified as combinations (set) of fields that have to be unique by
+  adding `@UniqueEntity(fields={"field1", "field2", "fieldN"})`. With this strategy, the set will be validated (checked)
+  against existing records for uniqueness, however if one of the fields is duplicate it will not matter as the entire
+  set is evaluated as a whole rather than individual fields.
+- Or as individual fields by adding several statements of the form `@UniqueEntity("field1")`, `@UniqueEntity("field2")`
+  , `@UniqueEntity("fieldN")`. With this strategy, each field will be validated (checked) against existing records for
+  uniqueness.
+- The latter is preferred.
+
+#### JWT Tokens (Authentication)
+
+- Resources: 
+- https://www.vaadata.com/blog/jwt-tokens-and-security-working-principles-and-use-cases/
+- https://jwt.io/introduction
+- The user (via the client) sends his credentials and then receives an authentication token (given the credentials are
+  valid).
+- The authentication token is generated automatically as JSON (server).
+- Any subsequent request (client) will include in its headers the JWT and if the JWT is valid, access is granted.
+- Structure:
+
+```
+JWT Token
+    |------->   Header
+    |           {
+    |            "alg": "H256",
+    |            "typ": "JWT         
+    |           }
+    |
+    |------->   Payload
+                {
+                  "sub":"1234567890",
+                  "name":"Karl Doe",
+                  "iat": 1516239022
+                }
+```
+
+- The signature is done on the Header object as a Public/Private Key pair.
+
+```
+|-----------|               
+| Signature | ==========> |---------|
+|-----------|             | Header  |
+Public/Private            |---------|
+  Key pair                | Payload |
+                          |---------|
+```
+
+<table style="border-style: solid; width: fit-content">
+    <thead>
+        <th>Base64Url(Header)</th>
+        <th>Base64Url(Payload)</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Base64Url(Header)</td>
+            <td>Base64Url(Payload)</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center">Signature</td>
+        </tr>
+        <tr>
+            <td>Example:</td>
+            <td><a href="https://jwt.io/introduction">See the section "Putting all together"</a></td>
+        </tr>
+    </tbody>
+</table>
+
