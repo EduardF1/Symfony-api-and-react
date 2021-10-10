@@ -2,27 +2,27 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\BlogPost;
-use App\Entity\Comment;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
+
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+use Faker\Factory;
+
+use App\Entity\User;
+use App\Entity\Comment;
+use App\Entity\BlogPost;
+
+/**
+ * Class for loading test data into the database
+ */
 class AppFixtures extends Fixture
 {
-    /**
-     * @var UserPasswordHasherInterface
-     */
+    private Factory $faker;
     private UserPasswordHasherInterface $passwordHasher;
 
     /**
-     * @var Factory
-     */
-    private $faker;
-
-    /**
+     * AppFixtures Class constructor
      * @param UserPasswordHasherInterface $passwordHasher
      */
     public function __construct(UserPasswordHasherInterface $passwordHasher)

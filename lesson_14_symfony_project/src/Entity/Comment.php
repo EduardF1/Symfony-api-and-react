@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CommentRepository;
+
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
+use App\Repository\CommentRepository;
 /**
  * @ApiResource(
  *     itemOperations={"get"},
@@ -21,29 +23,29 @@ class Comment
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $content;
+    private ?string $content;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $published;
+    private ?DateTimeInterface $published;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn()
      */
-    private $author;
+    private User $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogPost", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $blogPost;
+    private BlogPost $blogPost;
 
     public function getId(): ?int
     {
@@ -62,12 +64,12 @@ class Comment
         return $this;
     }
 
-    public function getPublished(): ?\DateTimeInterface
+    public function getPublished(): ?DateTimeInterface
     {
         return $this->published;
     }
 
-    public function setPublished(\DateTimeInterface $published): self
+    public function setPublished(DateTimeInterface $published): self
     {
         $this->published = $published;
 
@@ -94,7 +96,7 @@ class Comment
     }
 
     /**
-     * @return mixed
+     * @return BlogPost
      */
     public function getBlogPost(): BlogPost
     {

@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\BlogPostRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 use ApiPlatform\Core\Annotation\ApiResource;
+
 use JetBrains\PhpStorm\Pure;
 
+use App\Repository\BlogPostRepository;
 /**
  * @ORM\Entity(repositoryClass=BlogPostRepository::class)
  * @ApiResource(
@@ -23,38 +26,38 @@ class BlogPost
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $published;
+    private ?DateTimeInterface $published;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $content;
+    private ?string $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $author;
+    private User $author;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $slug;
+    private ?string $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
      */
-    private $comments;
+    private ArrayCollection $comments;
 
     #[Pure] public function __construct()
     {
@@ -82,12 +85,12 @@ class BlogPost
         return $this;
     }
 
-    public function getPublished(): ?\DateTimeInterface
+    public function getPublished(): ?DateTimeInterface
     {
         return $this->published;
     }
 
-    public function setPublished(\DateTimeInterface $published): self
+    public function setPublished(DateTimeInterface $published): self
     {
         $this->published = $published;
 
@@ -126,7 +129,7 @@ class BlogPost
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getSlug(): ?string
     {
@@ -134,12 +137,10 @@ class BlogPost
     }
 
     /**
-     * @param mixed $slug
+     * @param string $slug
      */
-    public function setSlug($slug): void
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
-
-
 }
