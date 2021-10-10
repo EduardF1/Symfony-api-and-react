@@ -11,11 +11,14 @@
 2. run `composer create-project symfony/skeleton projectName`.
 3. A project named `projectName` will be created in `D:user/userName/projects`.
 4. After the project was generated, run `php -S 127.0.0.1:8000 -t public/` to run the web development server.
+5. Additionally, for starting/stopping the development server the following commands can be run:
+`symfony server:start` and `symfony server:stop`.
 
 ### Annotations (Symfony):
 
 - Not present by default, i.e. using the skeleton project, but they can be installed
   using `composer require annotations`.
+- Sometimes for new changes to take place, it is necessary to clear the development cache, run `php bin/console cache:clear`.
 
 ### API Routes:
 
@@ -67,7 +70,8 @@
   items (CRUD on 1 resource).
 - Regardless of single item manipulation or collection manipulation, specific operations can be enabled/disabled from
   the defaults provided by API Platform through using annotations on the resource class:
-
+- There property `normalizationContext` allows for custom serialization/deserialization contexts (https://api-platform.com/docs/core/serialization/).
+If no serialization/deserialization group (https://api-platform.com/docs/core/serialization/#using-serialization-groups) is provided, the "default" group is used.
 ```
 Example:
 /**
@@ -170,4 +174,9 @@ class User {
     }       
 ```
 
+#### Serialization groups
+- These can be used to include/exclude certain entity properties from the serialization. Typically, 
+there are 2 main categories, read (the serialized property will be present in the response) and write
+  (the property will be hidden within the response).
+- Docs.: https://api-platform.com/docs/core/serialization/#using-serialization-groups
 
