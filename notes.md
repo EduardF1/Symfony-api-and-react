@@ -72,6 +72,7 @@
   the defaults provided by API Platform through using annotations on the resource class:
 - There property `normalizationContext` allows for custom serialization/deserialization contexts (https://api-platform.com/docs/core/serialization/).
 If no serialization/deserialization group (https://api-platform.com/docs/core/serialization/#using-serialization-groups) is provided, the "default" group is used.
+- Available api routes can be accessed using `php bin/console debug:router`.
 ```
 Example:
 /**
@@ -176,7 +177,11 @@ class User {
 
 #### Serialization groups
 - These can be used to include/exclude certain entity properties from the serialization. Typically, 
-there are 2 main categories, read (the serialized property will be present in the response) and write
+there are 2 main categories, `read` (the serialized property will be present in the response) and `write`
   (the property will be hidden within the response).
 - Docs.: https://api-platform.com/docs/core/serialization/#using-serialization-groups
+
+#### Adding services
+- After implementing a new service, it will be autowired and configured within the application by Symfony 
+itself, example run `php bin/console debug:container PasswordHashSubscriber` to verify the service's properties.
 
