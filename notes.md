@@ -247,8 +247,18 @@ use Symfony\Component\Validator\Constraints as Assert;
   valid).
 - The authentication token is generated automatically as JSON (server).
 - Any subsequent request (client) will include in its headers the JWT and if the JWT is valid, access is granted.
-- Structure:
+- Tokens are not encrypted, just encoded (can be read/modified by 3rd parties).
+- 3rd parties cannot sign the token without the public/private key pair.
+- Inside the payload of a JWT the following can be added (safely):
+    * user identifier
+    * token expiration date
+    * token issue date
+- What should be excluded (unsafe):
+    * user personal data (email, etc...)
+    * credit card numbers
+    * user passwords
 
+- Structure (Anatomy of a JWT):
 ```
 JWT Token
     |------->   Header
@@ -296,3 +306,16 @@ Public/Private            |---------|
     </tbody>
 </table>
 
+- Installation of lexik (library for JWT generation):
+```
+composer require lexik/jwt-authentication-bundle
+```
+- If not installed, OpenSSL can be installed by following the instructions specified in
+<a href="https://medium.com/swlh/installing-openssl-on-windows-10-and-updating-path-80992e26f6a1">this installation guide.</a> 
+- Once installed, OpenSSL can be used to generate a private key:
+```
+openssl genrsa -out config/jwt/private.pem -aes256 4096 
+```
+- The output (private key) will be found in `config/jwt/private.pem`, the encryption uses the <a href="https://www.n-able.com/blog/aes-256-encryption-algorithm">AES-256 encryption algorithm.</a>
+- From the private key, using the <a href="https://www.educative.io/edpresso/what-is-the-rsa-algorithm">RSA algorithm</a>, the public key is generated using
+`openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem` (the output, public key will be found in config/jwt/public.pem).
