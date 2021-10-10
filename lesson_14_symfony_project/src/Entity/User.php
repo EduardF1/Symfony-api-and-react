@@ -31,23 +31,25 @@ class User implements PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("read")
+     * @Groups({"read","write"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("read")
+     * @Groups({"read","write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("write")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("write")
      */
     private $password;
 
