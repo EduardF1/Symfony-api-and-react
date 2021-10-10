@@ -308,7 +308,7 @@ Public/Private            |---------|
 
 - Installation of lexik (library for JWT generation):
 ```
-composer require lexik/jwt-authentication-bundle
+composer require lexik/jwt-authentication-bundle # might require check after initial installation
 ```
 - If not installed, OpenSSL can be installed by following the instructions specified in
 <a href="https://medium.com/swlh/installing-openssl-on-windows-10-and-updating-path-80992e26f6a1">this installation guide.</a> 
