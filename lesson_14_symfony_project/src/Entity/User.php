@@ -32,25 +32,26 @@ class User implements PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read","write"})
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
+     * @Groups({"read","write"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read","write"})
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
+     * @Groups({"read","write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("write")
      * @Assert\NotBlank()
      * @Assert\Email()
+     * @Assert\Length(min=6, max=255)
+     * @Groups("write")
      */
     private $email;
 
