@@ -203,3 +203,14 @@ use Symfony\Component\Validator\Constraints as Assert;
      */
     private $email;
 ```
+
+#### Regex
+- Need to be surrounded with "/".
+Example:
+```
+(?=.*[A-Z])     (?=.*[a-z])     (?=.*[0-9])     .{7,}
+    |               |               |             |_ match on an input/text length of [7,inf)  
+    |               |               |_ match against numbers
+    |               |_ match against lower case letters
+    |_ match against upper case letters
+```
