@@ -185,3 +185,21 @@ there are 2 main categories, `read` (the serialized property will be present in 
 - After implementing a new service, it will be autowired and configured within the application by Symfony 
 itself, example run `php bin/console debug:container PasswordHashSubscriber` to verify the service's properties.
 
+#### Validation
+- Symfony's validation component allows parameter validation on certain constraints.
+- Import (with "Assert" alias):
+```
+use Symfony\Component\Validator\Constraints as Assert;
+```
+- Example usage:
+```
+     * @Assert\NotBlank()               --->    assert that the property is not blank in the request object
+     * @Assert\Length(min=6, max=255)   --->    assert that the length is in [6,255]
+     */
+    private $username;
+    
+     * @Assert\NotBlank()
+     * @Assert\Email()                  --->    assert that the property is a valid email address email@email.org
+     */
+    private $email;
+```

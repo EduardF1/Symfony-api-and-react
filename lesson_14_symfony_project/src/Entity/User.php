@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -32,18 +33,24 @@ class User implements PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read","write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=6, max=255)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read","write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=6, max=255)
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups("write")
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
