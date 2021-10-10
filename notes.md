@@ -34,7 +34,7 @@ database and previous migrations, otherwise errors will occur.
 - Install with `composer require serializer`.
 - Allows serialization/deserialization.
 
-#### Fixture Bundles (fake data for testing):
+#### Fixture Bundles (fake data for testing, aka "Seeding"):
 - docs.: https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
 - Installation, run `composer require --dev doctrine/doctrine-fixtures-bundle`.
 - After installation, a class named `AppFixtures` will be found in `src/DataFixtures`,
@@ -58,3 +58,7 @@ run `symfony composer remove 'admin'` (remove the admin bundle), run `symfony co
 #### Security:
 - See https://symfony.com/blog/new-in-symfony-5-3-passwordhasher-component (Implementation).
 - See https://symfony.com/doc/current/security.html#c-hashing-passwords (Configuration).
+
+#### Faker:
+- Install by running `composer require --dev fzaninotto/faker`
+- Library docs.: https://github.com/fzaninotto/Faker

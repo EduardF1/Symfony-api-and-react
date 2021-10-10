@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\BlogPostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=BlogPostRepository::class)
@@ -44,6 +47,20 @@ class BlogPost
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
+     */
+    private $comments;
+
+    #[Pure] public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
+    public function getComments(): Collection {
+        return $this->comments;
+    }
 
     public function getId(): ?int
     {
