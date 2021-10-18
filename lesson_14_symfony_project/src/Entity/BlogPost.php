@@ -13,6 +13,7 @@ use Doctrine\ORM\PersistentCollection;
 use JetBrains\PhpStorm\Pure;
 
 use App\Repository\BlogPostRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      }
  * )
  */
-class BlogPost
+class BlogPost implements IAuthoredEntity, IPublishedDateEntity
 {
     /**
      * @ORM\Id
@@ -66,7 +67,7 @@ class BlogPost
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private User $author;
+    private UserInterface $author;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -111,7 +112,7 @@ class BlogPost
         return $this->published;
     }
 
-    public function setPublished(DateTimeInterface $published): self
+    public function setPublished(DateTimeInterface $published): IPublishedDateEntity
     {
         $this->published = $published;
 
@@ -131,18 +132,18 @@ class BlogPost
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
-    public function getAuthor(): User
+    public function getAuthor(): UserInterface
     {
         return $this->author;
     }
 
     /**
-     * @param User $author
+     * @param UserInterface $author
      * @return BlogPost
      */
-    public function setAuthor(User $author): self
+    public function setAuthor(UserInterface $author): IAuthoredEntity
     {
         $this->author = $author;
 

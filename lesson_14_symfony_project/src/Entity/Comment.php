@@ -8,38 +8,49 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 use App\Repository\CommentRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"get"}
+ *     itemOperations={
+ *          "get",
+ *          "put"={
+ *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user"
+ *          }
+ *      },
+ *     collectionOperations={
+ *          "get",
+ *          "post"  = {
+ *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')"
+ *             }
+ *      }
  * )
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-#[ApiResource]
-class Comment
+class Comment implements IAuthoredEntity
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="text")
      */
-    private ?string $content;
+    private string $content;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?DateTimeInterface $published;
+    private DateTimeInterface $published;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn()
      */
-    private User $author;
+    private UserInterface $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogPost", inversedBy="comments")
@@ -69,7 +80,7 @@ class Comment
         return $this->published;
     }
 
-    public function setPublished(DateTimeInterface $published): self
+    public function setPublished(DateTimeInterface $published): IPublishedDateEntity
     {
         $this->published = $published;
 
@@ -77,18 +88,18 @@ class Comment
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
-    public function getAuthor() : User
+    public function getAuthor() : UserInterface
     {
         return $this->author;
     }
 
     /**
-     * @param User $author
-     * @return Comment
+     * @param UserInterface $author
+     * @return IAuthoredEntity
      */
-    public function setAuthor(User $author): self
+    public function setAuthor(UserInterface $author): IAuthoredEntity
     {
         $this->author = $author;
 
