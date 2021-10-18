@@ -24,21 +24,27 @@ use App\Repository\UserRepository;
  *     itemOperations={
  *          "get" = {
  *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')",
- *              normalization_context={
+ *              "normalization_context"={
  *                      "groups"={"get"}
  *                  }
  *             },
  *          "put"={
  *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY') and object == user",
- *              denormalization_context={
+ *              "denormalization_context"={
  *                   "groups"={"put"}
+ *              },
+ *              "normalization_context"={
+ *                      "groups"={"get"}
  *              }
  *          }
  *     },
  *     collectionOperations={
  *          "post"={
- *              denormalization_context={
+ *              "denormalization_context"={
  *                  "groups"={"post"}
+ *              },
+ *              "normalization_context"={
+ *                      "groups"={"get"}
  *              }
  *          }
  *      }
