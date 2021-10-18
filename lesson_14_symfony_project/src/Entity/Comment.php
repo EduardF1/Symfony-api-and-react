@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 use App\Repository\CommentRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -23,7 +25,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *          "post"  = {
  *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')"
  *             }
- *      }
+ *      },
+ *     denormalizationContext={
+ *          "groups"={"post"}
+ *     }
  * )
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
@@ -38,6 +43,9 @@ class Comment implements IAuthoredEntity
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"post"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=5, max=3000)
      */
     private string $content;
 
@@ -55,6 +63,7 @@ class Comment implements IAuthoredEntity
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogPost", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     *
      */
     private BlogPost $blogPost;
 
@@ -90,7 +99,7 @@ class Comment implements IAuthoredEntity
     /**
      * @return UserInterface
      */
-    public function getAuthor() : UserInterface
+    public function getAuthor(): UserInterface
     {
         return $this->author;
     }

@@ -14,6 +14,7 @@ use JetBrains\PhpStorm\Pure;
 
 use App\Repository\BlogPostRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,7 +31,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "post"  = {
  *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')"
  *             }
- *      }
+ *      },
+ *     denormalizationContext={
+ *          "groups"={"post"}
+ *     }
  * )
  */
 class BlogPost implements IAuthoredEntity, IPublishedDateEntity
@@ -46,6 +50,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=10)
+     * @Groups({"post"})
      */
     private string $title;
 
@@ -60,6 +65,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      * @Assert\Length(min=20)
+     * @Groups({"post"})
      */
     private string $content;
 
@@ -72,6 +78,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"post"})
      */
     private string $slug;
 

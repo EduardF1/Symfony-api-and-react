@@ -5,9 +5,9 @@ namespace App\EventSubscriber;
 use ApiPlatform\Core\EventListener\EventPriorities;
 
 use App\Entity\IAuthoredEntity;
-use App\Entity\BlogPost;
-use App\Entity\Comment;
+
 use OpenApi\Tests\Fixtures\Parser\UserInterface;
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
