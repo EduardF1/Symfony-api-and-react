@@ -36,6 +36,7 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    # To get a token change the role for ^/api to IS_AUTHENTICATED_ANONYMOUSLY
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

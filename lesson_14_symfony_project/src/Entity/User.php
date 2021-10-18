@@ -18,16 +18,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\UserRepository;
+
 /**
+ * @ApiResource(
+ *     itemOperations={
+ *          "get" = {
+ *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')"
+ *             }
+ *     },
+ *     collectionOperations={"post"},
+ *     normalizationContext={
+ *          "groups"={"read"}
+ *     },
+ *     denormalizationContext={
+ *          "groups"={"write"}
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @method string getUserIdentifier()
  * @UniqueEntity("username")
  * @UniqueEntity("email")
  */
-#[ApiResource(
-    denormalizationContext: ['groups' => ['write']],
-    normalizationContext: ['groups' => ['read']],
-)]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
@@ -97,7 +108,8 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     // Required constructor (for Doctrine) for 1..* relationships
     // Typical procedure for entities that have a single to multiple cardinality
-    #[Pure] public function __construct(){
+    #[Pure] public function __construct()
+    {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }

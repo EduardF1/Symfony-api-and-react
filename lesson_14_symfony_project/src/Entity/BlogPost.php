@@ -9,14 +9,22 @@ use Doctrine\ORM\Mapping as ORM;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
+use Doctrine\ORM\PersistentCollection;
 use JetBrains\PhpStorm\Pure;
 
 use App\Repository\BlogPostRepository;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass=BlogPostRepository::class)
  * @ApiResource(
  *     itemOperations={"get"},
- *     collectionOperations={"get"}
+ *     collectionOperations={
+ *          "get",
+ *          "post"  = {
+ *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')"
+ *             }
+ *      }
  * )
  */
 class BlogPost
@@ -26,22 +34,28 @@ class BlogPost
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=10)
      */
-    private ?string $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank()
+     * @Assert\Type("\DateTimeInterface")
      */
-    private ?DateTimeInterface $published;
+    private DateTimeInterface $published;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(min=20)
      */
-    private ?string $content;
+    private string $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
@@ -51,20 +65,22 @@ class BlogPost
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
-    private ?string $slug;
+    private string $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
      */
-    private ArrayCollection $comments;
+    private ArrayCollection|PersistentCollection $comments;
 
     #[Pure] public function __construct()
     {
         $this->comments = new ArrayCollection();
     }
 
-    public function getComments(): Collection {
+    public function getComments(): Collection
+    {
         return $this->comments;
     }
 
