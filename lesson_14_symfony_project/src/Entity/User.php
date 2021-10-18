@@ -23,16 +23,25 @@ use App\Repository\UserRepository;
  * @ApiResource(
  *     itemOperations={
  *          "get" = {
- *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')"
- *             }
+ *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')",
+ *              normalization_context={
+ *                      "groups"={"get"}
+ *                  }
+ *             },
+ *          "put"={
+ *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *              denormalization_context={
+ *                   "groups"={"put"}
+ *              }
+ *          }
  *     },
- *     collectionOperations={"post"},
- *     normalizationContext={
- *          "groups"={"read"}
- *     },
- *     denormalizationContext={
- *          "groups"={"write"}
- *     }
+ *     collectionOperations={
+ *          "post"={
+ *              denormalization_context={
+ *                  "groups"={"post"}
+ *              }
+ *          }
+ *      }
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @method string getUserIdentifier()
@@ -45,38 +54,38 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("read")
+     * @Groups("get")
      */
-    private ?int $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
-     * @Groups({"read","write"})
+     * @Groups({"get","post"})
      */
-    private ?string $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
-     * @Groups({"read","write"})
+     * @Groups({"get", "post", "put"})
      */
-    private ?string $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(min=6, max=255)
-     * @Groups("write")
+     * @Groups({"post", "put"})
      */
-    private ?string $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("write")
+     * @Groups({"put","post"})
      * @Assert\Regex(
      *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
      *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
@@ -86,23 +95,24 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     /**
      * @Assert\NotBlank()
+     * @Groups({"put","post"})
      * @Assert\Expression(
      *    "this.getPassword() === this.getConfirmationPassword()",
      *     message="Passwords do not match"
      * )
-     * @Groups("write")
+     * @Groups("post")
      */
-    private ?string $confirmationPassword;
+    private string $confirmationPassword;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost", mappedBy="author")
-     * @Groups("read")
+     * @Groups("get")
      */
     private ArrayCollection|PersistentCollection $posts;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
-     * @Groups("read")
+     * @Groups("get")
      */
     private ArrayCollection|PersistentCollection $comments;
 
