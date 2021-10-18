@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -84,6 +85,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
+     * @ApiSubresource()
      */
     private ArrayCollection|PersistentCollection $comments;
 

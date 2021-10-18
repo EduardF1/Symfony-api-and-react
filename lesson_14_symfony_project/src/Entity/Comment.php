@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * )
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-class Comment implements IAuthoredEntity
+class Comment implements IAuthoredEntity, IPublishedDateEntity
 {
     /**
      * @ORM\Id
@@ -51,6 +51,8 @@ class Comment implements IAuthoredEntity
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank()
+     * @Assert\Type("\DateTimeInterface")
      */
     private DateTimeInterface $published;
 
@@ -63,7 +65,7 @@ class Comment implements IAuthoredEntity
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogPost", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     *
+     * @Groups({"post"})
      */
     private BlogPost $blogPost;
 
