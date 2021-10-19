@@ -319,3 +319,10 @@ openssl genrsa -out config/jwt/private.pem -aes256 4096
 - The output (private key) will be found in `config/jwt/private.pem`, the encryption uses the <a href="https://www.n-able.com/blog/aes-256-encryption-algorithm">AES-256 encryption algorithm.</a>
 - From the private key, using the <a href="https://www.educative.io/edpresso/what-is-the-rsa-algorithm">RSA algorithm</a>, the public key is generated using
 `openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem` (the output, public key will be found in config/jwt/public.pem).
+
+#### Adding user roles
+- After adding user roles (within the user entity), the database tables need to be dropped and the sequence for reinitializing the tables is:
+  - Make the migrations, run `php bin/console make:migration`.
+  - Execute the migrations, run `php bin/console doctrine:migrations:migrate`.
+  - Load the fixtures' data, run `php bin/console doctrine:fixtures:load`.
+- By adding an initializer within the User entity's constructor, we automatically set any given role on the entity.

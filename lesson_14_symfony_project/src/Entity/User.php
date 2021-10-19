@@ -19,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\UserRepository;
+use App\Controller\ResetPasswordAction;
 
 /**
  * @ApiResource(
@@ -39,9 +40,9 @@ use App\Repository\UserRepository;
  *              }
  *          },
  *          "put-reset-password"={
- *                  "access_control"= "is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *                  "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
  *                  "method"="PUT",
- *                  "path"="/user/{id}/reset-password",
+ *                  "path"="/users/{id}/reset-password",
  *                  "controller"=ResetPasswordAction::class,
  *                  "denormalization_context"={
  *                       "groups"={"put-reset-password"}
@@ -84,76 +85,78 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Length(min=6, max=255)
+     * @Assert\NotBlank(groups="post")
+     * @Assert\Length(min=6, max=255,groups="post")
      * @Groups({"get","post", "get-comment-with-author", "get-blog-post-with-author"})
      */
     private string $username;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Length(min=6, max=255)
+     * @Assert\NotBlank(groups={"post"})
+     * @Assert\Length(min=6, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put", "get-comment-with-author", "get-blog-post-with-author"})
      */
     private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Email()
-     * @Assert\Length(min=6, max=255)
+     * @Assert\NotBlank(groups={"post"})
+     * @Assert\Email(groups={"post", "put"})
+     * @Assert\Length(min=6, max=255, groups={"post", "put"})
      * @Groups({"post", "put", "get-admin", "get-owner"})
      */
     private string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"put","post"})
+     * @Groups({"post"})
+     * @Assert\NotBlank(groups="post")
      * @Assert\Regex(
      *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
+     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter",
+     *     groups="post"
      * )
      */
     private string $password;
 
     /**
-     * @Assert\NotBlank()
-     * @Groups({"put","post"})
+     * @Assert\NotBlank(groups="post")
+     * @Groups({"post"})
      * @Assert\Expression(
      *    "this.getPassword() === this.getConfirmationPassword()",
+     *     message="Passwords do not match",
+     *     groups="post"
+     * )
+     */
+    private ?string $confirmationPassword;
+
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
+     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
+     * )
+     */
+    private ?string $newPassword;
+
+    /**
+     * @Assert\NotBlank()
+     * @Groups({"put-reset-password"})
+     * @Assert\Expression(
+     *    "this.getNewPassword() === this.getNewConfirmationPassword()",
      *     message="Passwords do not match"
      * )
-     * @Groups("post")
      */
-    private string $confirmationPassword;
-
-    /**
-     * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
-     * )
-     */
-    private $newPassword;
-
-    /**
-     * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
-     * )
-     */
-    private $newRetypedPassword;
+    private ?string $newConfirmationPassword;
 
     /**
      * @Groups({"put-reset-password"})
      * @Assert\NotBlank()
      * @UserPassword()
      */
-    private $oldPassword;
+    private ?string $oldPassword;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost", mappedBy="author")
@@ -311,9 +314,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->roles = $roles;
     }
 
-    /**
-     * @return null
-     */
     public function getSalt()
     {
         return null;
@@ -324,19 +324,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         //  Required empty method body
     }
 
-    public function getNewPassword(): string
+    public function getNewPassword() : ?string
     {
         return $this->newPassword;
-    }
-
-    public function getNewRetypedPassword(): string
-    {
-        return $this->newRetypedPassword;
-    }
-
-    public function getOldPassword(): string
-    {
-        return $this->oldPassword;
     }
 
     public function setNewPassword($newPassword): void
@@ -344,9 +334,19 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->newPassword = $newPassword;
     }
 
-    public function setNewRetypedPassword($newRetypedPassword): void
+    public function getNewConfirmationPassword(): ?string
     {
-        $this->newRetypedPassword = $newRetypedPassword;
+        return $this->newConfirmationPassword;
+    }
+
+    public function setNewConfirmationPassword($newConfirmationPassword): void
+    {
+        $this->newConfirmationPassword = $newConfirmationPassword;
+    }
+
+    public function getOldPassword() : ?string
+    {
+        return $this->oldPassword;
     }
 
     public function setOldPassword($oldPassword): void
