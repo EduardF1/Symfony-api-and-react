@@ -14,6 +14,7 @@ use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -93,7 +94,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(min=6, max=255)
-     * @Groups({"post", "put", "get-admin"})
+     * @Groups({"post", "put", "get-admin", "get-owner"})
      */
     private string $email;
 
@@ -119,6 +120,33 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private string $confirmationPassword;
 
     /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
+     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
+     * )
+     */
+    private $newPassword;
+
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
+     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
+     * )
+     */
+    private $newRetypedPassword;
+
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @UserPassword()
+     */
+    private $oldPassword;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost", mappedBy="author")
      * @Groups("get")
      */
@@ -132,6 +160,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     /**
      * @ORM\Column(type="simple_array", length=200)
+     * @Groups({"get-admin", "get-owner"})
      */
     private array $roles;
 
@@ -268,7 +297,8 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @param array $roles the roles to set for a user
      */
-    public function setRoles(array $roles){
+    public function setRoles(array $roles)
+    {
         $this->roles = $roles;
     }
 
@@ -283,5 +313,35 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function eraseCredentials()
     {
         //  Required empty method body
+    }
+
+    public function getNewPassword(): string
+    {
+        return $this->newPassword;
+    }
+
+    public function getNewRetypedPassword(): string
+    {
+        return $this->newRetypedPassword;
+    }
+
+    public function getOldPassword(): string
+    {
+        return $this->oldPassword;
+    }
+
+    public function setNewPassword($newPassword): void
+    {
+        $this->newPassword = $newPassword;
+    }
+
+    public function setNewRetypedPassword($newRetypedPassword): void
+    {
+        $this->newRetypedPassword = $newRetypedPassword;
+    }
+
+    public function setOldPassword($oldPassword): void
+    {
+        $this->oldPassword = $oldPassword;
     }
 }
