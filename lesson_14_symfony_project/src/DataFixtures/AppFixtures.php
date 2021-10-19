@@ -26,42 +26,42 @@ class AppFixtures extends Fixture
             'username' => 'admin',
             'email' => 'admin@blog.com',
             'name' => 'Daniel Squid',
-            'password' => 'secret123#',
+            'password' => 'Secret123#',
             'roles' => [User::ROLE_SUPERADMIN]
         ],
         [
             'username' => 'john_doe',
             'email' => 'john@blog.com',
             'name' => 'John Doe',
-            'password' => 'secret123#',
+            'password' => 'Secret123#',
             'roles' => [User::ROLE_ADMIN]
         ],
         [
             'username' => 'rob_smith',
             'email' => 'rob@blog.com',
             'name' => 'Rob Smith',
-            'password' => 'secret123#',
+            'password' => 'Secret123#',
             'roles' => [User::ROLE_WRITER]
         ],
         [
             'username' => 'jenny_rowling',
             'email' => 'jenny@blog.com',
             'name' => 'Jenny Rowling',
-            'password' => 'secret123#',
+            'password' => 'Secret123#',
             'roles' => [User::ROLE_WRITER]
         ],
         [
             'username' => 'han_solo',
             'email' => 'han@blog.com',
             'name' => 'Han Solo',
-            'password' => 'secret123#',
+            'password' => 'Secret123#',
             'roles' => [User::ROLE_EDITOR]
         ],
         [
             'username' => 'jar_jar_binks',
             'email' => 'jarjarbinks@therepublic.com',
             'name' => 'Jar-Jar Binks',
-            'password' => 'secret123#',
+            'password' => 'Secret123#',
             'roles' => [User::ROLE_COMMENTATOR]
         ]
     ];
