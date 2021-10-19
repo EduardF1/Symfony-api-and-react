@@ -93,7 +93,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(min=6, max=255)
-     * @Groups({"post", "put"})
+     * @Groups({"post", "put", "get-admin"})
      */
     private string $email;
 
