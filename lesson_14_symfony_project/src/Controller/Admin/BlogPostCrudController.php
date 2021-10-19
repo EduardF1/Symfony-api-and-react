@@ -6,6 +6,9 @@ use App\Entity\BlogPost;
 
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
+/**
+ * Controller class for blog posts
+ */
 class BlogPostCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

@@ -25,7 +25,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=BlogPostRepository::class)
  * @ApiResource(
  *     itemOperations={
- *          "get",
+ *          "get"={
+ *               "normalization_context"={
+ *                   "groups"={"get-blog-post-with-author"}
+ *              }
+ *          },
  *          "put"={
  *              "access_control"= "is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user"
  *          }
@@ -47,6 +51,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get-blog-post-with-author"})
      */
     private int $id;
 
@@ -54,7 +59,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=10)
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post-with-author"})
      */
     private string $title;
 
@@ -62,6 +67,7 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      * @Assert\Type("\DateTimeInterface")
+     * @Groups({"get-blog-post-with-author"})
      */
     private DateTimeInterface $published;
 
@@ -69,26 +75,28 @@ class BlogPost implements IAuthoredEntity, IPublishedDateEntity
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      * @Assert\Length(min=20)
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post-with-author"})
      */
     private string $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get-blog-post-with-author"})
      */
     private UserInterface $author;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post-with-author"})
      */
     private string $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
      * @ApiSubresource()
+     * @Groups({"get-blog-post-with-author"})
      */
     private ArrayCollection|PersistentCollection $comments;
 

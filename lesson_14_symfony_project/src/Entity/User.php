@@ -56,6 +56,14 @@ use App\Repository\UserRepository;
  */
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
+    const ROLE_COMMENTATOR = 'ROLE_COMMENTATOR';
+    const ROLE_WRITER = 'ROLE_WRITER';
+    const ROLE_EDITOR = 'ROLE_EDITOR';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
+
+    const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -68,7 +76,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
-     * @Groups({"get","post", "get-comment-with-author"})
+     * @Groups({"get","post", "get-comment-with-author", "get-blog-post-with-author"})
      */
     private string $username;
 
@@ -76,7 +84,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
-     * @Groups({"get", "post", "put", "get-comment-with-author"})
+     * @Groups({"get", "post", "put", "get-comment-with-author", "get-blog-post-with-author"})
      */
     private string $name;
 
@@ -122,12 +130,18 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      */
     private ArrayCollection|PersistentCollection $comments;
 
+    /**
+     * @ORM\Column(type="simple_array", length=200)
+     */
+    private array $roles;
+
     // Required constructor (for Doctrine) for 1..* relationships
     // Typical procedure for entities that have a single to multiple cardinality
     #[Pure] public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->roles = self::DEFAULT_ROLES;
     }
 
     /**
@@ -243,11 +257,24 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->confirmationPassword = $repeatPassword;
     }
 
-    public function getRoles()
+    /**
+     * @return string[] the array of defined user roles
+     */
+    public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
+    /**
+     * @param array $roles the roles to set for a user
+     */
+    public function setRoles(array $roles){
+        $this->roles = $roles;
+    }
+
+    /**
+     * @return null
+     */
     public function getSalt()
     {
         return null;
@@ -255,6 +282,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function eraseCredentials()
     {
-
+        //  Required empty method body
     }
 }
