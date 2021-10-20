@@ -19,7 +19,7 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
        UserConfirmationService $userConfirmationService
     )
     {
-        $this->$userConfirmationService = $userConfirmationService;
+        $this->userConfirmationService = $userConfirmationService;
     }
 
     public static function getSubscribedEvents()

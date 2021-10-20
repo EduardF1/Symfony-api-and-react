@@ -1,6 +1,8 @@
 <?php
+namespace App\Email;
 
 use App\Entity\User;
+use Swift_Mailer;
 use Twig\Environment;
 
 class Mailer
@@ -26,10 +28,10 @@ class Mailer
             ]
         );
 
-        $message = (new \Swift_Message('Hello from API Platform!'))
+        $message = (new \Swift_Message('Please confirm your account!'))
             ->setFrom('api-platform@gmail.com')
             ->setTo($user->getEmail())
-            ->setBody($body);
+            ->setBody($body, 'text/html');
 
         $this->mailer->send($message);
     }

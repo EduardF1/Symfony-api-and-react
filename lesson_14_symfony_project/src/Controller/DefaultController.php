@@ -15,12 +15,11 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="default_index")
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        return new JsonResponse([
-           'action' => 'index',
-           'time' => time()
-        ]);
+        return $this->render(
+            'base.html.twig'
+        );
     }
 
     /**
