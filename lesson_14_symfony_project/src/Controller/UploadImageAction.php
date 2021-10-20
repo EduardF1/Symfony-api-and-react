@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Validator\Exception\ValidationException;
 use ApiPlatform\Core\Validator\ValidatorInterface;
-use App\Entity\Image;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
+use ApiPlatform\Core\Validator\Exception\ValidationException;
 
+use App\Entity\Image;
+
+use Doctrine\ORM\EntityManagerInterface;
+
+use App\Form\ImageType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactoryInterface;
 class UploadImageAction
 {
     private FormFactoryInterface $formFactory;
@@ -29,9 +32,9 @@ class UploadImageAction
         //  Create a new Image instance
         $image = new Image();
         //  Validate the form
-        $form = $this->formFactory->create(null, $image);
+        $form = $this->formFactory->create(ImageType::class, $image);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isSubmitted()){
+        if($form->isSubmitted() && $form->isValid()){
             //  Persist the new Image entity
             $this->entityManager->persist($image);
             $this->entityManager->flush();

@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
     private UserConfirmationService $userConfirmationService;

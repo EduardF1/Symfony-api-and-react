@@ -3,7 +3,9 @@
 namespace App\Security;
 
 use App\Repository\UserRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserConfirmationService

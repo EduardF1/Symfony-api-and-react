@@ -3,22 +3,26 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+
 use Doctrine\ORM\Mapping as ORM;
+
 use Symfony\Component\Validator\Constraints as Assert;
+
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+use App\Controller\UploadImageAction;
 /**
  * @ORM\Entity()
  * @Vich\Uploadable()
  * @ApiResource(
- *      collectionOperations={
- *          "get",
- *          "post"={
- *              "method"="POST",
- *              "path"="/images",
- *              "controller"=UploadImageAction::class,
- *              "defaults"={"_api_receive"=false}
- *          }
+ *     collectionOperations={
+ *         "get",
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/images",
+ *             "controller"=UploadImageAction::class,
+ *             "defaults"={"_api_receive"=false}
+ *         }
  *     }
  * )
  */
@@ -47,11 +51,6 @@ class Image
         return $this->id;
     }
 
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
     public function getFile()
     {
         return $this->file;
@@ -64,7 +63,7 @@ class Image
 
     public function getUrl()
     {
-        return $this->url;
+        return '/images/' . $this->url;
     }
 
     public function setUrl($url): void
