@@ -7,6 +7,8 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Security\TokenGenerator;
 
+use Mailer;
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -23,12 +25,12 @@ class PasswordHashSubscriber implements EventSubscriberInterface
 {
     private UserPasswordHasherInterface $passwordHasher;
     private TokenGenerator $tokenGenerator;
-    private \Swift_Mailer $mailer;
+    private Mailer $mailer;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
         TokenGenerator              $tokenGenerator,
-        \Swift_Mailer               $mailer
+        Mailer               $mailer
     )
     {
         $this->passwordHasher = $passwordHasher;
@@ -64,11 +66,6 @@ class PasswordHashSubscriber implements EventSubscriberInterface
         );
 
         // Send an email
-        $message = (new \Swift_Message('Hello from API Platform!'))
-            ->setFrom('fischereduard695@gmail.com')
-            ->setTo('fischereduard695@gmail.com')
-            ->setBody('Hello, how are you?');
-
-        $this->mailer->send($message);
+        $this->mailer->sendConfirmationEmail($user);
     }
 }
