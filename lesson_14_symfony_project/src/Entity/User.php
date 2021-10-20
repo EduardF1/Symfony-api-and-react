@@ -184,7 +184,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private  bool $enabled;
+    private bool $enabled;
 
     /**
      * @ORM\Column(type="string", length=40, nullable=true)
@@ -388,6 +388,10 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    public function getEnabled(): bool{
+        return $this->enabled;
     }
 
     public function getConfirmationToken()

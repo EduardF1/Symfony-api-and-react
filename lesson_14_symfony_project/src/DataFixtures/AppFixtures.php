@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Security\TokenGenerator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -20,6 +21,7 @@ use App\Entity\BlogPost;
 class AppFixtures extends Fixture
 {
     private Generator $faker;
+    private TokenGenerator $tokenGenerator;
     private UserPasswordHasherInterface $passwordHasher;
     private const USERS = [
         [
@@ -27,42 +29,48 @@ class AppFixtures extends Fixture
             'email' => 'admin@blog.com',
             'name' => 'Daniel Squid',
             'password' => 'Secret123#',
-            'roles' => [User::ROLE_SUPERADMIN]
+            'roles' => [User::ROLE_SUPERADMIN],
+            'enabled' => true
         ],
         [
             'username' => 'john_doe',
             'email' => 'john@blog.com',
             'name' => 'John Doe',
             'password' => 'Secret123#',
-            'roles' => [User::ROLE_ADMIN]
+            'roles' => [User::ROLE_ADMIN],
+            'enabled' => true
         ],
         [
             'username' => 'rob_smith',
             'email' => 'rob@blog.com',
             'name' => 'Rob Smith',
             'password' => 'Secret123#',
-            'roles' => [User::ROLE_WRITER]
+            'roles' => [User::ROLE_WRITER],
+            'enabled' => true
         ],
         [
             'username' => 'jenny_rowling',
             'email' => 'jenny@blog.com',
             'name' => 'Jenny Rowling',
             'password' => 'Secret123#',
-            'roles' => [User::ROLE_WRITER]
+            'roles' => [User::ROLE_WRITER],
+            'enabled' => true
         ],
         [
             'username' => 'han_solo',
             'email' => 'han@blog.com',
             'name' => 'Han Solo',
             'password' => 'Secret123#',
-            'roles' => [User::ROLE_EDITOR]
+            'roles' => [User::ROLE_EDITOR],
+            'enabled' => false
         ],
         [
             'username' => 'jar_jar_binks',
             'email' => 'jarjarbinks@therepublic.com',
             'name' => 'Jar-Jar Binks',
             'password' => 'Secret123#',
-            'roles' => [User::ROLE_COMMENTATOR]
+            'roles' => [User::ROLE_COMMENTATOR],
+            'enabled' => true
         ]
     ];
 
@@ -70,10 +78,14 @@ class AppFixtures extends Fixture
      * AppFixtures Class constructor
      * @param UserPasswordHasherInterface $passwordHasher
      */
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher,
+        TokenGenerator $tokenGenerator
+    )
     {
         $this->passwordHasher = $passwordHasher;
         $this->faker = Factory::create();
+        $this->tokenGenerator =$tokenGenerator;
     }
 
     /**
@@ -142,7 +154,13 @@ class AppFixtures extends Fixture
                 $userFixture['password']
             ));
             $user->setRoles($userFixture['roles']);
-            $user->setEnabled(true);
+            $user->setEnabled($userFixture['enabled']);
+
+            if(!$userFixture['enabled']){
+                $user->setConfirmationToken(
+                    $this->tokenGenerator->getRandomSecureToken()
+                );
+            }
 
             $this->addReference('user_' . $userFixture['username'], $user);
 
