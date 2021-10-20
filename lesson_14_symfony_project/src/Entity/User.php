@@ -176,6 +176,21 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      */
     private array $roles;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private int $passwordChangeDate;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private  bool $enabled;
+
+    /**
+     * @ORM\Column(type="string", length=40, nullable=true)
+     */
+    private $confirmationToken;
+
     // Required constructor (for Doctrine) for 1..* relationships
     // Typical procedure for entities that have a single to multiple cardinality
     #[Pure] public function __construct()
@@ -183,6 +198,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->roles = self::DEFAULT_ROLES;
+        $this->confirmationToken = null;
     }
 
     /**
@@ -352,5 +368,35 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function setOldPassword($oldPassword): void
     {
         $this->oldPassword = $oldPassword;
+    }
+
+    public function getPasswordChangeDate(): int
+    {
+        return $this->passwordChangeDate;
+    }
+
+    public function setPasswordChangeDate(int $passwordChangeDate): void
+    {
+        $this->passwordChangeDate = $passwordChangeDate;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken($confirmationToken): void
+    {
+        $this->confirmationToken = $confirmationToken;
     }
 }
