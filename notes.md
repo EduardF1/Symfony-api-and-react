@@ -326,3 +326,19 @@ openssl genrsa -out config/jwt/private.pem -aes256 4096
   - Execute the migrations, run `php bin/console doctrine:migrations:migrate`.
   - Load the fixtures' data, run `php bin/console doctrine:fixtures:load`.
 - By adding an initializer within the User entity's constructor, we automatically set any given role on the entity.
+
+#### Swift mail
+- Install by running `composer require symfony/swiftmailer-bundle`.
+Usage:
+```
+$message = (new \Swift_Message('Please confirm your account!'))
+            ->setFrom('api-platform@gmail.com')
+            ->setTo($user->getEmail())
+            ->setBody($body, 'text/html');
+
+        $this->mailer->send($message);
+```
+
+#### Vich, image upload
+- Install by running `composer require vich/uploader-bundle`.
+- 
