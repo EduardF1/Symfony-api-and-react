@@ -4,7 +4,8 @@ namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 
-use JetBrains\PhpStorm\ArrayShape;
+use App\Entity\User;
+use App\Security\TokenGenerator;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +13,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-use App\Entity\User;
 /**
  * Subscriber class for hashing the password of a new user upon the creation event triggering.
  * Required as API platform simply posts the data as plain text.
@@ -21,39 +21,42 @@ use App\Entity\User;
 class PasswordHashSubscriber implements EventSubscriberInterface
 {
     private UserPasswordHasherInterface $passwordHasher;
+    private TokenGenerator $tokenGenerator;
 
-    /**
-     * PasswordHashSubscriber class constructor
-     * @param UserPasswordHasherInterface $passwordHasher
-     */
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher,
+        TokenGenerator              $tokenGenerator
+    )
     {
         $this->passwordHasher = $passwordHasher;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
-    /**
-     * @return array[] of events that have triggered
-     */
-    #[ArrayShape([KernelEvents::VIEW => "array"])]
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['hashPassword', EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => ['userRegistered', EventPriorities::PRE_WRITE],
         ];
     }
 
-    public function hashPassword(ViewEvent $event): void
+    public function userRegistered(ViewEvent $event)
     {
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if (!$user instanceof User || !in_array($method, [Request::METHOD_POST])) {
+        if (!$user instanceof User ||
+            !in_array($method, [Request::METHOD_POST])) {
             return;
         }
 
-        $user->setPassword($this->passwordHasher->hashPassword(
-            $user,
-            $user->getPassword()
-        ));
+        // If it is a User, we need to hash password here
+        $user->setPassword(
+            $this->passwordHasher->hashPassword($user, $user->getPassword())
+        );
+
+        // Create confirmation token
+        $user->setConfirmationToken(
+            $this->tokenGenerator->getRandomSecureToken()
+        );
     }
 }

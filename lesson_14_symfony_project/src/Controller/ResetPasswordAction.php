@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Validator\Exception\ValidationException;
 use ApiPlatform\Core\Validator\ValidatorInterface;
 
 use App\Entity\User;
@@ -34,11 +35,6 @@ class ResetPasswordAction
     }
 
     public function  __invoke(User $data): JsonResponse{
-//        var_dump(
-//            $data->getNewPassword(),
-//            $data->getNewRetypedPassword(),
-//            $data->getOldPassword()
-//        );die;
         $this->validator->validate($data);
 
         $data->setPassword(

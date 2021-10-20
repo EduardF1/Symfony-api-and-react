@@ -133,28 +133,30 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     /**
      * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups="put-reset-password")
      * @Assert\Regex(
      *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter"
+     *     message="Password must be seven characters long and contain at least one digit, one upper case letter and one lower case letter",
+     *     groups="put-reset-password"
      * )
      */
     private ?string $newPassword;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups="put-reset-password")
      * @Groups({"put-reset-password"})
      * @Assert\Expression(
      *    "this.getNewPassword() === this.getNewConfirmationPassword()",
-     *     message="Passwords do not match"
+     *     message="Passwords do not match",
+     *     groups="put-reset-password"
      * )
      */
     private ?string $newConfirmationPassword;
 
     /**
      * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
-     * @UserPassword()
+     * @Assert\NotBlank(groups="put-reset-password")
+     * @UserPassword(groups="put-reset-password")
      */
     private ?string $oldPassword;
 
@@ -179,7 +181,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private int $passwordChangeDate;
+    private $passwordChangeDate;
 
     /**
      * @ORM\Column(type="boolean")
@@ -199,6 +201,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->comments = new ArrayCollection();
         $this->roles = self::DEFAULT_ROLES;
         $this->confirmationToken = null;
+        $this->enabled = false;
     }
 
     /**
@@ -370,7 +373,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->oldPassword = $oldPassword;
     }
 
-    public function getPasswordChangeDate(): int
+    public function getPasswordChangeDate(): ?int
     {
         return $this->passwordChangeDate;
     }
